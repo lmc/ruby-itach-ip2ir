@@ -1,6 +1,6 @@
 # Ruby::Itach::Ip2ir
 
-TODO: Write a gem description
+Unofficial - Ruby interface to Global Cache's itach ip2ir infrared emitter devices
 
 ## Installation
 
@@ -18,7 +18,14 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'ruby-itach-ip2ir'
+device = RubyItachIp2ir::Device.new("192.168.0.108")
+device.connect
+device.set_learning_mode(true)
+device.listen_for_learning_responses{|resp| puts "> #{resp.inspect}" }
+# > "sendir,1:3,6,37878,1,1,125,61,16,15,16,15...
+```
 
 ## Contributing
 
