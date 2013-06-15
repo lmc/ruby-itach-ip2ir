@@ -3,6 +3,7 @@ require 'ruby-itach-ip2ir'
 device = RubyItachIp2ir::Device.new("192.168.0.108")
 device.connect
 device.set_learning_mode(true)
+device.listen_for_learning_responses{|resp| puts "> #{resp.inspect}" }
 
 =end
 
@@ -34,6 +35,16 @@ class RubyItachIp2ir::Device
     end
   end
 
+  def listen_for_learning_responses(&block)
+    while connected?
+      str = ""
+      until str[-2..-1] == "\r\n"
+        str << read_block(1)
+      end
+      yield str
+    end
+  end
+
 
   # protected
 
@@ -55,10 +66,14 @@ class RubyItachIp2ir::Device
     nil
   end
 
+  def read_block(bytes)
+    socket.recv(bytes)
+  end
+
   def expect_response(expected_hash)
     response = read_from_unblock_to_block
-    if expected = expected_hash[response]
-      expected
+    if expected_hash.key?(response)
+      expected_hash[response]
     else
       raise "Unexpected response: #{response.inspect} (Can handle: #{expected_hash.inspect}"
     end
