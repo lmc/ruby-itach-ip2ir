@@ -21,7 +21,8 @@ Or install it yourself as:
 ```ruby
 require 'ruby-itach-ip2ir'
 device = RubyItachIp2ir::Device.new("192.168.0.108")
-device.connect
+timeout = 10 #seconds
+device.connect(timeout)
 
 device.set_learning_mode(true)
 device.listen_for_learning_responses{|resp| puts "send_ir_string = #{resp.inspect}" }
@@ -32,6 +33,8 @@ device.send_ir_raw(send_ir_string)
 
 device.send_ir( device_id, request_id, freq, repeat, offset, ir_string )
 device.send_ir( "1:3", :auto, 37878, 1, 1, "125,61,16,15,16,15..." )
+
+device.close
 ```
 
 ## Contributing
